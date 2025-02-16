@@ -18,7 +18,7 @@ export const typeDefs = `#graphql
   }
 
   type Query {
-    reviews: [Reviews]
+    reviews: [Review]
     games: [Game]
     authors: [Author]
   }
@@ -26,3 +26,6 @@ export const typeDefs = `#graphql
 
 // graphql types - int, float, string, boolean, ID
 // ! means required
+
+// type Query { .. } is an absolute must have
+// which is basically what an end user can query from the Graph structure
