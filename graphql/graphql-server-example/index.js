@@ -4,22 +4,30 @@ import { startStandaloneServer } from '@apollo/server/standalone'
 // Our Data 
 import db from './_db.js'
 
+// typeDefs contain the Schema 
 import { typeDefs } from './schema.js'
 
+// resolvers take care of the queries
 const resolvers = {
     Query: {
         games() {
             return db.games
         },
+        game(parent, args, context) {
+	        return db.games.find((game) => game.id === args.id) 
+	    },
         authors() {
             return db.authors
         },
+        author(parent, args, context) {
+	        return db.authors.find((author) => author.id === args.id) 
+	    },
         reviews() {
             return db.reviews
         },
-	review(parent, args, context) {
-	    return db.reviews.find((review) => review.id === args.id) 
-	}
+	    review(parent, args, context) {
+	        return db.reviews.find((review) => review.id === args.id) 
+	    }
     }
 }
 
