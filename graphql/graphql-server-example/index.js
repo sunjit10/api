@@ -16,7 +16,10 @@ const resolvers = {
         },
         reviews() {
             return db.reviews
-        }
+        },
+	review(parent, args, context) {
+	    return db.reviews.find((review) => review.id === args.id) 
+	}
     }
 }
 
@@ -39,3 +42,6 @@ const { url } = await startStandaloneServer(server, {
 })
 
 console.log('Server ready at port', 4000);
+
+// To run Apollo Server: node index.js  
+// Now login to Apollo Explorer UI at http://localhost:4000
