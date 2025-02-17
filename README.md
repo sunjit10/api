@@ -174,6 +174,7 @@ query ExampleQuery($id: ID!) {
       content
     }
   }
+}  
 ```
 
 To make that happen, `schema.js` was modified
