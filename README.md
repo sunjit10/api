@@ -184,11 +184,6 @@ Game had this line added
 reviews: [Review!]
 ```
 
-Review had this added
-```
-game: Game!
-```
-
 In the index.js, this was added
 ```
 Game: {
@@ -222,4 +217,48 @@ Author: {
 }
 ```
 
-plus `schema.js` additions to `type Author` and `type Review`
+plus `schema.js` additions to `type Author`
+
+
+### Linking Other way
+
+Now if you want to link the other way from Review to Games or Authors
+
+```
+query ReviewQuery($id: ID!) {
+  review(id: $id) {
+    rating,
+    content
+    game {
+      title,
+      platform
+    }
+  }
+}
+```
+
+The last 2 lines were added to Review in schema file
+
+```
+type Review {
+    id: ID!
+    rating: Int!
+    content: String!
+    game: Game!
+    author: Author!
+  }
+```
+
+And the following in index.js
+
+```
+Review: {
+  author(parent) {
+    return db.authors.find((a) => a.id === parent.author_id)
+  },
+  game(parent) {
+    return db.games.find((g) => g.id === parent.game_id)
+  }
+}
+
+```
