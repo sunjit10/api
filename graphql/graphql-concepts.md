@@ -39,6 +39,8 @@ With graphql, it is abstracted and you would have:
 
 mysite.com/graphql 
 
+### Query to fetch EXACTLY what you need
+
 You would typically not have detailed endpoints like you do with REST APIs.
 
 If we wanted the courses data (as shown in `Overfetching` in REST APIs), you will still call mysite.com/graphql and pass a Query parameter to specify EXACTLY what you need:
@@ -52,6 +54,8 @@ Query {
   }
 }
 ```
+
+### Nested Queries to make a single call
 
 For example show in `Underfetching` where multiple REST API calls had to be made to get what we need, you can have `Nested` Query parameter in a single call.
 
@@ -70,6 +74,87 @@ Query {
                 url
             }
         }
+    }
+}
+```
+
+### Mutations
+
+Mutations === modifications to data (not only just fetch it) and this includes inserts/updates/deletes to the data. 
+
+
+## GraphQL Syntax
+
+```
+query ReviewsQuery {
+    reviews {
+
+    }
+}
+```
+
+In GraphQL, you can `name your query` (example: ReviewsQuery). This is optional but recommended.
+
+Next, provide a `Resoure name` (example: reviews) which tells you what type of Resource you want to fetch from the backend. 
+
+Next, you tell exactly which fields would you like to fetch. This is how GraphQL is better than REST, you can be specific and avoid overfetching.
+
+```
+query ReviewsQuery {
+    reviews {
+        rating,
+        content,
+        id
+    }
+}
+```
+
+Nested calls - you can fetch data from more than one resources by making use of Nested queries.
+
+```
+query {
+    reviews {
+        rating,
+        content,
+        author {
+            name
+        }
+    }
+}
+```
+
+In the above example, we are fetching from two different resources (reviews and author) in a single query (vs sending multiple queries in REST API)
+
+### Query variables
+
+If you are interested to fetch for a specific entity, example I want to fetch only for game with id as "2", you would use the syntax below
+
+```
+query {
+    game(id: "2") {
+        title,
+        review {
+            rating,
+            author {
+                name
+            }
+        },
+}
+```
+
+As shown above, you are making a single query but fetching data from 3 different resources (game, review and author). You are fetching only for game id=2 and only fetching specific fields from other resources.
+
+
+### Mutations - Add/Update/Delete
+
+Below is an example of an Mutation that adds a new game:
+
+```
+mutation AddMutation($game: AddGameInput!) {
+    addGame(game: $game) {
+        id,
+        title,
+        platform
     }
 }
 ```

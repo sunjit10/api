@@ -2,12 +2,19 @@
 
 ## Sample App using Apollo Framework
 
+Apollo Explorer -> GraphQL client that we run on the browser
+NodeJS + Apollo Server (package) -> GraphQL server/backend
+
+Each instance of Apollo Server spins up an instance of Apollo Explorer on our local machine that we can use to directly access it.  
+
 ### Env Setup
 
 ```
 npm init --yes && npm pkg set type="module"
 npm install @apollo/server graphql
 ```
+
+VS Code Extension: GraphQL Syntax Highlighting (from GraphQL Foundation)
 
 ### Demo
 
@@ -50,10 +57,26 @@ export const typeDefs = `#graphql
 `
 ```
 
-- GraphQL has following Data Types: Integer, Float, String, Boolean, ID
+- GraphQL has following Data Types: 
+  - Integer
+  - Float
+  - String
+  - Boolean
+  - ID
 - ID! means ID is a required field (The ! means required)
+  - Ex: authorid: ID!
+  - If it was: authorid: ID   then it means that authorid can be null
+- ID is used as a key for data objects
+- [String] means an array of Strings
+  - Ex: cities: [String]
+  - Ex: cities: [String]!  then it means cities is an array but each element can be null
+  - Ex: cities: [String!]! then it means cities is an array, each element cannot be null
+
 - #graphql is optional, just used for syntax highlighting on vscode
-- The most important is `type Query { ...}` which specifies the entry points to what is available for access
+
+- The most important is `type Query { ...}` which specifies the entry points to what is available for access and its Return types. 
+  - The `Every GraphQL Schema must have a Query type`
+  - This is where you define how your graph is accessible
 
 
 ### Resolvers
@@ -127,6 +150,8 @@ type Query {
   }
 ```
 As shown above, the line that makes it work is `review(id: ID!): Review` 
+
+The above allows you to return a single review for a given ID (and that ID cannot be null)
 
 In Apollo Explorer, you would so something like:
 
