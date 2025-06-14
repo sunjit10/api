@@ -53,8 +53,9 @@ const resolvers = {
 const server = new ApolloServer({
 
     // typeDefs - description of data types and relationships with other data types
+    //          - It is a definition of different type of data we can expose in the graph
     //          - kind of queries that can be made on this data
-    //          - all that above combined to define a schema
+    //          - all that above combined makes up a schema
     typeDefs,
     
     // resolvers - this makes the Queries part of GraphQL work

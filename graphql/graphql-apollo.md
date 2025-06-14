@@ -5,7 +5,7 @@
 Apollo Explorer -> GraphQL client that we run on the browser
 NodeJS + Apollo Server (package) -> GraphQL server/backend
 
-Each instance of Apollo Server spins up an instance of Apollo Explorer on our local machine that we can use to directly access it.  
+Each instance of Apollo Server spins up an instance of Apollo Explorer on our local machine that we can use to directly access it, typically at `http://localhost:4000`
 
 ### Env Setup
 
@@ -13,6 +13,8 @@ Each instance of Apollo Server spins up an instance of Apollo Explorer on our lo
 npm init --yes && npm pkg set type="module"
 npm install @apollo/server graphql
 ```
+
+Note: `type="module"` allows you to use ES6 modules
 
 VS Code Extension: GraphQL Syntax Highlighting (from GraphQL Foundation)
 
@@ -57,26 +59,11 @@ export const typeDefs = `#graphql
 `
 ```
 
-- GraphQL has following Data Types: 
-  - Integer
-  - Float
-  - String
-  - Boolean
-  - ID
-- ID! means ID is a required field (The ! means required)
-  - Ex: authorid: ID!
-  - If it was: authorid: ID   then it means that authorid can be null
-- ID is used as a key for data objects
-- [String] means an array of Strings
-  - Ex: cities: [String]
-  - Ex: cities: [String]!  then it means cities is an array but each element can be null
-  - Ex: cities: [String!]! then it means cities is an array, each element cannot be null
-
 - #graphql is optional, just used for syntax highlighting on vscode
 
-- The most important is `type Query { ...}` which specifies the entry points to what is available for access and its Return types. 
-  - The `Every GraphQL Schema must have a Query type`
-  - This is where you define how your graph is accessible
+- The most important is `type Query { ...}` which specifies the entry points to what is available for access in the Graph and its Return types. 
+- `Every GraphQL Schema must have a Query type`
+- This is where you define how your graph is accessible
 
 
 ### Resolvers
