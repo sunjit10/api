@@ -52,6 +52,19 @@ export const typeDefs = `#graphql
     title: String!
     platform: [String!]!
   }
+
+  type Review {
+    id: ID!
+    rating: Int!
+    content: String!
+  }
+
+  type Author {
+    id: ID!
+    name: String!
+    verified: Boolean!
+  }
+
   ...
   type Query {
     reviews: [Review]
@@ -64,6 +77,10 @@ export const typeDefs = `#graphql
 - The most important is `type Query { ...}` which specifies the entry points to what is available for access in the Graph and its Return types. 
 - `Every GraphQL Schema must have a Query type`
 - This is where you define how your graph is accessible
+- In the above example, the Query type only mentions Review, which means an external client can only access Review directly (cannot access Author or Game directly but on indirectly if they are linked to Review)
+- Also, in the above example - a client cannot access a single Review but only a list of Reviews.
+
+
 
 
 ### Resolvers
@@ -71,6 +88,16 @@ export const typeDefs = `#graphql
 Resolvers are what makes the queries possible.
 
 We have the mocked up data in the file `_db.js` which is imported in the main index.js
+
+You can see that `reviews` array inside it shows the dependency between a review and author/game.
+
+For example:
+
+```
+ {id: '1', rating: 9, content: 'lorem ipsum', author_id: '1', game_id: '2'}
+ ````
+
+Now we define the resolvers as shown below:
 
 ```
 const resolvers = {
@@ -98,7 +125,7 @@ The above matches what we have defined for `type Query`
   }
 ```
 
-Now you can access in Apollo Explorer and run queries like
+Now you can access in Apollo Explorer and run queries like shown below. The interesting part is that the resolvers returns games but in query you can just ask for specific fields and the Apollo framework sorts that out for you.
 
 ```
 query ExampleQuery {
@@ -126,7 +153,13 @@ query ExampleQuery {
 
 ### Query Variables
 
-To access a specific Review (single item), you would modify
+From the above example, we get the entire dataset for each entity vs the ability to query individual item.
+
+To access a specific Review (single item), you would use `Query Variables`
+
+This requires changes to the `type Query` so that it also accepts a single entry point, like ability to ask data for a specific review as well as a resolve function needs to be added that supports a specific review.
+
+First: Changes to Query parameter:
 
 ```
 type Query {
@@ -139,6 +172,21 @@ type Query {
 As shown above, the line that makes it work is `review(id: ID!): Review` 
 
 The above allows you to return a single review for a given ID (and that ID cannot be null)
+
+Next step: Updates to resolver to handle single id. Added this to index.js
+
+```
+review(parent, args, context) {
+  return db.reviews.find((review) => review.id === args.id) 
+}
+```
+
+Here, each resolver function gets 3 parameters which are:
+- `parent` points to the parent resolver in the resolver chain. That is not used here.
+- `args` are the arguments that we pass. This is where we can access query variables
+- `context` used for supplying context value (ex: Auth info) throughout resolvers.
+
+
 
 In Apollo Explorer, you would so something like:
 
@@ -158,18 +206,6 @@ and in the Variables section, you provide the specific ID you want to access
   "id": "1"
 }
 ```
-
-Finally, Added this to index.js
-
-```
-review(parent, args, context) {
-  return db.reviews.find((review) => review.id === args.id) 
-}
-```
-Here, each resolver function gets 3 parameters which are:
-- `parent` points to the parent resolver in the resolver chain. That is not used here.
-- `args` are the arguments that we pass. This is where we can access query variables
-- `context` used for supplying context value (ex: Auth info) throughout resolvers.
 
 
 ### Related Data
