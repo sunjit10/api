@@ -232,7 +232,10 @@ Game had this line added
 reviews: [Review!]
 ```
 
-In the index.js, this was added
+In the index.js, the existing `Query` was not modified, rather a new construct for `Game` is being created since the `Query` construct in index.js matches the `type Query` defined in `schema.js` and we are not changing that. Our goal is to create a new functionality to related Game to Reviews.
+
+Here, we `have to` use the `parent` syntax since it implicitly calls the `game` syntax first.
+
 ```
 Game: {
   reviews(parent) {
@@ -266,6 +269,31 @@ Author: {
 ```
 
 plus `schema.js` additions to `type Author`
+
+After all is done, these are the changes to index.js
+
+```
+Game: {
+        reviews(parent) {
+            return db.reviews.filter((r) => r.game_id === parent.id)
+        }
+    },
+    Author: {
+        reviews(parent) {
+            return db.reviews.filter((r) => r.author_id === parent.id)
+        }
+    },
+    Review: {
+        author(parent) {
+            return db.authors.find((a) => a.id === parent.author_id)
+        },
+        game(parent) {
+            return db.games.find((g) => g.id === parent.game_id)
+        }
+    }
+```
+
+
 
 
 ### Linking Other way
